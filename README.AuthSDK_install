@@ -1,0 +1,64 @@
+[AuthSDK_pkg Install]
+
+1) golang install & GOPATH
+	(v1.8.3)		: wget https://storage.googleapis.com/golang/go1.8.3.darwin-amd64.pkg
+	env				: export GOROOT=/usr/local/go
+					  export GOPATH=$HOME/Workspace
+					  export PATH=$PATH:$GOROOT/bin:$GOPATH/bin:$GOROOT/pkg/tool/darwin_amd64
+
+2) node / npm install
+	(pkg version)	: https://github.com/hyperledger/fabric-sdk-node  
+	(install)		: http://junsikshim.github.io/2016/01/29/Mac%EC%97%90%EC%84%9C-Node.js-%EC%84%A4%EC%B9%98%ED%95%98%EA%B8%B0.html
+			=> 주의 	: 반드시 bash SHELL 환경설정 파일에 nvm.sh이 자동으로 실행 되도록 설정 해야 함.
+
+3) docker install
+	URL				: wget https://download.docker.com/mac/stable/Docker.dmg
+	exec			: 반드시 docker 실행
+
+4) test_cc chaincode move
+	move			: cp -rf test_cc $GOPATH/src/github.com/test_cc
+
+5) AuthSDK_pkg fabric docker image download
+	SHELL			: download-dockerimages.sh
+	exec			: docker-compose -f docker-compose.yaml up
+
+6) adminClientOrg1 
+	npm install 	: npm install
+	exec			: node app.js
+					  localhost:4500 check
+
+7) testClientOrg1
+	npm install 	: npm install
+	exec			: node app.js
+					  localhost:5100 check
+
+8) skbc source download
+	URL 			: git clone https://github.com/simon0210/skbc.git
+	npm install 	: npm install
+	exec			: npm run start
+
+
+
+[시연 시나리오]
+1) adminClientOrg1
+	localhost:4500 페이지에서 네트워크 초기화만
+
+2) testClientOrg1
+	localhost:5100 페이지에서 testClient 사용자 register & enroll
+	localhost:5100/cc 페이지에서 Chaincode deploy install & instantiate
+	=> 주의 : skbc/.env 파일 내부 chaincodeID / chaincodeVer 환경 변수와 동일하게 Deploy 설정 해야 함.
+
+	localhost:5100 페이지에서 AuthSDK 사용자 register
+
+3) AuthSDK
+	localhost:300 페이지에서 AuthSDK 사용자 enroll (인증서 발급을 받는 과정) 
+
+4) query 를 실행 하여 사용자 등록 정보의 존재 여부 확인 : 없음
+
+5) cert 를 실행 하여 본인 인증 사용자 등록 
+
+6) enc 를 실행 하여 사용자 인증을 위한 hash / encMsg 생성
+
+7) cert/validation 을 실행 하여 사용자 + 인증기관 이중 검증 진행
+
+
